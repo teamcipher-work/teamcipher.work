@@ -1,0 +1,977 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Team Cipher | Portfolio</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Mono:wght@300;400;500&family=Outfit:wght@200;300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #0a0a0f;
+            --surface: #111118;
+            --surface2: #16161f;
+            --border: rgba(255,255,255,0.07);
+            --border-hover: rgba(255,255,255,0.18);
+            --text: #e8e6f0;
+            --muted: #7a7890;
+            --accent: #c8b8ff;
+            --accent2: #89d4c8;
+            --gold: #e8c97a;
+            --glow: rgba(200, 184, 255, 0.15);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        html { scroll-behavior: smooth; }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            font-family: 'Outfit', sans-serif;
+            font-weight: 300;
+            line-height: 1.7;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* ── Noise texture overlay ── */
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.035'/%3E%3C/svg%3E");
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* ── Ambient gradient blob ── */
+        .ambient {
+            position: fixed;
+            width: 700px;
+            height: 700px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(200,184,255,0.06) 0%, transparent 70%);
+            top: -200px;
+            right: -200px;
+            pointer-events: none;
+            z-index: 0;
+            animation: drift 12s ease-in-out infinite alternate;
+        }
+
+        .ambient2 {
+            position: fixed;
+            width: 500px;
+            height: 500px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(137,212,200,0.05) 0%, transparent 70%);
+            bottom: -150px;
+            left: -100px;
+            pointer-events: none;
+            z-index: 0;
+            animation: drift2 15s ease-in-out infinite alternate;
+        }
+
+        @keyframes drift { from { transform: translate(0,0) scale(1); } to { transform: translate(-60px,80px) scale(1.1); } }
+        @keyframes drift2 { from { transform: translate(0,0); } to { transform: translate(40px,-60px); } }
+
+        /* ── Header / Nav bar ── */
+        header {
+            position: fixed;
+            top: 0; left: 0; right: 0;
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1.2rem 5%;
+            background: rgba(10,10,15,0.7);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .logo {
+            font-family: 'DM Mono', monospace;
+            font-size: 0.8rem;
+            font-weight: 400;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: var(--accent);
+            opacity: 0.9;
+        }
+
+        .logo span { color: var(--muted); }
+
+        .nav-tag {
+            font-family: 'DM Mono', monospace;
+            font-size: 0.7rem;
+            color: var(--muted);
+            letter-spacing: 2px;
+        }
+
+        /* ── Hero ── */
+        .hero {
+            position: relative;
+            z-index: 1;
+            min-height: 100vh;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 8rem 5% 4rem;
+            gap: 4rem;
+        }
+
+        .hero-text { animation: slideUp 0.9s cubic-bezier(0.16,1,0.3,1) both; }
+        .hero-image { animation: slideUp 0.9s 0.15s cubic-bezier(0.16,1,0.3,1) both; }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        .eyebrow {
+            font-family: 'DM Mono', monospace;
+            font-size: 0.72rem;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            color: var(--accent);
+            margin-bottom: 1.8rem;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .eyebrow::before {
+            content: '';
+            display: inline-block;
+            width: 28px;
+            height: 1px;
+            background: var(--accent);
+        }
+
+        .hero-title {
+            font-family: 'Cormorant Garamond', Georgia, serif;
+            font-weight: 300;
+            font-size: clamp(3.5rem, 6vw, 5.5rem);
+            line-height: 1.0;
+            color: var(--text);
+            margin-bottom: 2rem;
+            letter-spacing: -1px;
+        }
+
+        .hero-title em {
+            font-style: italic;
+            color: var(--accent);
+        }
+
+        /* Name lockup — kept same concept, elevated style */
+        .founders-lockup {
+            display: inline-flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 2rem;
+            padding: 1rem 1.5rem;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            background: var(--surface);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .founders-lockup::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, rgba(200,184,255,0.04), transparent);
+            pointer-events: none;
+        }
+
+        .first-name {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 3.2rem;
+            font-weight: 300;
+            line-height: 0.85;
+            color: var(--text);
+            letter-spacing: -1px;
+        }
+
+        .brace-group {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .brace {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 2.8rem;
+            font-weight: 300;
+            color: var(--accent);
+            line-height: 1;
+            opacity: 0.6;
+            margin-right: 2px;
+        }
+
+        .last-names {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            gap: 2px;
+        }
+
+        .last-names span {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.05rem;
+            font-weight: 500;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: var(--muted);
+            line-height: 1.25;
+        }
+
+        .last-names span:first-child { color: var(--accent); }
+
+        .hero-desc {
+            color: var(--muted);
+            font-size: 1rem;
+            max-width: 420px;
+            line-height: 1.8;
+            font-weight: 300;
+        }
+
+        /* Hero image */
+        .hero-image {
+            display: flex;
+            justify-content: flex-end;
+        }
+
+        .img-frame {
+            position: relative;
+            width: 100%;
+            max-width: 460px;
+        }
+
+        .img-frame::before {
+            content: '';
+            position: absolute;
+            inset: -1px;
+            border-radius: 16px;
+            background: linear-gradient(135deg, rgba(200,184,255,0.3), rgba(137,212,200,0.1), transparent);
+            z-index: -1;
+        }
+
+        .img-frame::after {
+            content: '';
+            position: absolute;
+            bottom: -12px;
+            right: -12px;
+            width: 100%;
+            height: 100%;
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            z-index: -2;
+        }
+
+        .hero-image img {
+            width: 100%;
+            border-radius: 15px;
+            display: block;
+            filter: saturate(0.7) brightness(0.85);
+            transition: filter 0.4s;
+        }
+
+        .img-frame:hover img { filter: saturate(0.9) brightness(0.95); }
+
+        /* Stat badges */
+        .hero-stats {
+            display: flex;
+            gap: 1.5rem;
+            margin-top: 2.5rem;
+        }
+
+        .stat {
+            text-align: left;
+        }
+
+        .stat-num {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 2rem;
+            font-weight: 400;
+            color: var(--gold);
+            line-height: 1;
+        }
+
+        .stat-label {
+            font-family: 'DM Mono', monospace;
+            font-size: 0.65rem;
+            color: var(--muted);
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-top: 2px;
+        }
+
+        .stat-divider { width: 1px; background: var(--border); }
+
+        /* ── Tab Navigation ── */
+        .tab-wrapper {
+            position: relative;
+            z-index: 10;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 5% 3rem;
+        }
+
+        .section-rule {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .section-rule::before, .section-rule::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: var(--border);
+        }
+
+        .section-rule span {
+            font-family: 'DM Mono', monospace;
+            font-size: 0.65rem;
+            letter-spacing: 3px;
+            color: var(--muted);
+            text-transform: uppercase;
+            white-space: nowrap;
+        }
+
+        .tab-container {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 0.75rem;
+        }
+
+        /* ── BUTTONS — same shape/behavior, elevated styling ── */
+        .tab-btn {
+            background-color: transparent;
+            color: var(--muted);
+            border: 1px solid var(--border);
+            padding: 0.7rem 1.6rem;
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.9rem;
+            font-weight: 400;
+            letter-spacing: 0.5px;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .tab-btn::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, rgba(200,184,255,0.08), transparent);
+            opacity: 0;
+            transition: opacity 0.25s;
+        }
+
+        .tab-btn:hover {
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+
+        .tab-btn:hover::before { opacity: 1; }
+
+        .tab-btn.active {
+            background: linear-gradient(135deg, rgba(200,184,255,0.18), rgba(137,212,200,0.08));
+            color: var(--accent);
+            border-color: rgba(200,184,255,0.5);
+            box-shadow: 0 0 20px rgba(200,184,255,0.1);
+        }
+
+        .tab-btn.active::before { opacity: 1; }
+
+        /* ── Content Area ── */
+        .content-area {
+            position: relative;
+            z-index: 1;
+            padding: 0 5% 6rem;
+            max-width: 1200px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        .tab-content {
+            display: none;
+            animation: fadeUp 0.5s cubic-bezier(0.16,1,0.3,1) both;
+        }
+
+        .tab-content.active { display: block; }
+
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(12px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ── Cards Grid ── */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .card {
+            background: var(--surface);
+            border-radius: 16px;
+            overflow: hidden;
+            border: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            transition: transform 0.3s cubic-bezier(0.16,1,0.3,1), border-color 0.3s, box-shadow 0.3s;
+            position: relative;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, rgba(200,184,255,0.03), transparent);
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .card:hover {
+            transform: translateY(-6px);
+            border-color: rgba(200,184,255,0.25);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.4), 0 0 0 1px rgba(200,184,255,0.1);
+        }
+
+        .card-img-wrap {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            filter: saturate(0.6) brightness(0.75);
+            transition: filter 0.4s, transform 0.5s cubic-bezier(0.16,1,0.3,1);
+            display: block;
+        }
+
+        .card:hover img {
+            filter: saturate(0.8) brightness(0.9);
+            transform: scale(1.04);
+        }
+
+        .card-img-wrap::after {
+            content: '';
+            position: absolute;
+            bottom: 0; left: 0; right: 0;
+            height: 80px;
+            background: linear-gradient(transparent, var(--surface));
+        }
+
+        .card-content {
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+            position: relative;
+            z-index: 2;
+        }
+
+        .card-index {
+            font-family: 'DM Mono', monospace;
+            font-size: 0.65rem;
+            color: var(--accent);
+            letter-spacing: 2px;
+            margin-bottom: 0.5rem;
+            opacity: 0.7;
+        }
+
+        .card-content h4 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.7rem;
+            font-weight: 400;
+            color: var(--text);
+            margin-bottom: 0.7rem;
+            line-height: 1.1;
+        }
+
+        .card-content p {
+            color: var(--muted);
+            font-size: 0.88rem;
+            line-height: 1.6;
+            flex: 1;
+            margin-bottom: 1.5rem;
+        }
+
+        .card-actions { display: flex; justify-content: flex-end; }
+
+        /* Visit button — same shape as original, elevated */
+        .visit-btn {
+            background: transparent;
+            color: var(--text);
+            text-decoration: none;
+            padding: 0.6rem 1.5rem;
+            border-radius: 30px;
+            font-size: 0.75rem;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            font-family: 'DM Mono', monospace;
+            transition: all 0.25s;
+            border: 1px solid var(--border-hover);
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .visit-btn::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, rgba(200,184,255,0.15), rgba(137,212,200,0.08));
+            opacity: 0;
+            transition: opacity 0.25s;
+        }
+
+        .visit-btn:hover {
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+
+        .visit-btn:hover::before { opacity: 1; }
+
+        /* ── Coming Soon ── */
+        .coming-soon-wrap {
+            padding: 7rem 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        .coming-soon {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: clamp(3rem, 8vw, 6rem);
+            font-weight: 300;
+            font-style: italic;
+            color: transparent;
+            -webkit-text-stroke: 1px rgba(255,255,255,0.08);
+            letter-spacing: 6px;
+            text-align: center;
+            user-select: none;
+            animation: pulse 4s ease-in-out infinite;
+        }
+
+        .coming-soon-sub {
+            font-family: 'DM Mono', monospace;
+            font-size: 0.7rem;
+            color: var(--muted);
+            letter-spacing: 4px;
+            text-transform: uppercase;
+        }
+
+        @keyframes pulse {
+            0%, 100% { -webkit-text-stroke-color: rgba(255,255,255,0.06); }
+            50% { -webkit-text-stroke-color: rgba(200,184,255,0.25); }
+        }
+
+        /* ── Footer ── */
+        footer {
+            position: relative;
+            z-index: 1;
+            border-top: 1px solid var(--border);
+            padding: 3.5rem 5%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 1.5rem;
+        }
+
+        .footer-brand {
+            font-family: 'DM Mono', monospace;
+            font-size: 0.75rem;
+            color: var(--muted);
+            letter-spacing: 2px;
+        }
+
+        .social-links {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        .social-links a {
+            font-family: 'DM Mono', monospace;
+            font-size: 0.72rem;
+            color: var(--muted);
+            text-decoration: none;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            transition: color 0.25s;
+            position: relative;
+        }
+
+        .social-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0; right: 0;
+            height: 1px;
+            background: var(--accent);
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.25s;
+        }
+
+        .social-links a:hover { color: var(--accent); }
+        .social-links a:hover::after { transform: scaleX(1); }
+
+        .footer-copy {
+            font-size: 0.78rem;
+            color: rgba(122,120,144,0.5);
+        }
+
+        /* ── Responsive: Tablet (≤1024px) ── */
+        @media (max-width: 1024px) {
+            .hero {
+                gap: 2.5rem;
+                padding: 7rem 5% 3rem;
+            }
+
+            .hero-title {
+                font-size: clamp(3rem, 5.5vw, 4.5rem);
+            }
+
+            .grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        /* ── Responsive: Mobile (≤768px) ── */
+        @media (max-width: 768px) {
+            /* Header */
+            header {
+                padding: 1rem 5%;
+            }
+
+            .nav-tag {
+                display: none;
+            }
+
+            /* Hero — stack vertically, image first on mobile looks odd, keep text first */
+            .hero {
+                grid-template-columns: 1fr;
+                grid-template-rows: auto auto;
+                text-align: center;
+                padding: 5.5rem 6% 3rem;
+                gap: 2.5rem;
+                min-height: unset;
+            }
+
+            /* Put image below text on mobile */
+            .hero-text { order: 1; }
+            .hero-image { order: 2; justify-content: center; }
+
+            .eyebrow {
+                justify-content: center;
+                font-size: 0.65rem;
+                margin-bottom: 1.2rem;
+            }
+
+            .hero-title {
+                font-size: clamp(2.8rem, 11vw, 4rem);
+                margin-bottom: 1.5rem;
+            }
+
+            .founders-lockup {
+                display: inline-flex;
+                justify-content: center;
+                margin-bottom: 1.5rem;
+                padding: 0.85rem 1.2rem;
+            }
+
+            .first-name {
+                font-size: 2.5rem;
+            }
+
+            .last-names span {
+                font-size: 0.9rem;
+                letter-spacing: 1.5px;
+            }
+
+            .hero-desc {
+                font-size: 0.95rem;
+                max-width: 100%;
+                margin: 0 auto 0;
+            }
+
+            .hero-stats {
+                justify-content: center;
+                gap: 1.2rem;
+                margin-top: 2rem;
+            }
+
+            .stat-num { font-size: 1.6rem; }
+            .stat-label { font-size: 0.6rem; }
+
+            /* Image frame — smaller, tighter on mobile */
+            .img-frame {
+                max-width: 85%;
+                margin: 0 auto;
+            }
+
+            .img-frame::after { display: none; }
+
+            /* Tabs */
+            .tab-wrapper {
+                padding: 0 5% 2rem;
+            }
+
+            .tab-container {
+                gap: 0.5rem;
+            }
+
+            .tab-btn {
+                padding: 0.6rem 1.1rem;
+                font-size: 0.82rem;
+            }
+
+            /* Cards — single column */
+            .grid {
+                grid-template-columns: 1fr;
+                gap: 1.2rem;
+            }
+
+            /* Coming soon */
+            .coming-soon {
+                font-size: clamp(2rem, 10vw, 3.5rem);
+                letter-spacing: 3px;
+            }
+
+            .coming-soon-wrap {
+                padding: 4rem 0;
+            }
+
+            /* Footer */
+            footer {
+                flex-direction: column;
+                align-items: center;
+                text-align: center;
+                gap: 1rem;
+                padding: 2.5rem 5%;
+            }
+
+            .footer-copy { display: none; }
+        }
+
+        /* ── Responsive: Small mobile (≤400px) ── */
+        @media (max-width: 400px) {
+            .hero-title {
+                font-size: 2.4rem;
+            }
+
+            .first-name {
+                font-size: 2rem;
+            }
+
+            .tab-btn {
+                padding: 0.55rem 0.9rem;
+                font-size: 0.78rem;
+            }
+
+            .founders-lockup {
+                gap: 10px;
+                padding: 0.75rem 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="ambient"></div>
+<div class="ambient2"></div>
+
+<!-- Header -->
+<header>
+    <div class="logo">TC<span> / </span>2026</div>
+    <div class="nav-tag">Digital Craftsmen</div>
+</header>
+
+<!-- Hero -->
+<section class="hero">
+    <div class="hero-text">
+        <div class="eyebrow">Est. 2024 &nbsp;—&nbsp; New Delhi</div>
+
+        <h1 class="hero-title">Team <em>Cipher</em></h1>
+
+        <div class="founders-lockup">
+            <span class="first-name">Nikhil</span>
+            <div class="brace-group">
+                <div class="last-names">
+                    <span>Gupta</span>
+                    <span>Rawat</span>
+                </div>
+            </div>
+        </div>
+
+        <p class="hero-desc">We build thoughtful digital experiences, robust platforms, and practical tools to solve real-world problems.</p>
+
+        <div class="hero-stats">
+            <div class="stat">
+                <div class="stat-num">6+</div>
+                <div class="stat-label">Templates</div>
+            </div>
+            <div class="stat-divider"></div>
+            <div class="stat">
+                <div class="stat-num">2</div>
+                <div class="stat-label">Founders</div>
+            </div>
+            <div class="stat-divider"></div>
+            <div class="stat">
+                <div class="stat-num">∞</div>
+                <div class="stat-label">Ambition</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="hero-image">
+        <div class="img-frame">
+            <img src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=600&q=80" alt="Nikhil Gupta and Nikhil Rawat">
+        </div>
+    </div>
+</section>
+
+<!-- Tabs -->
+<div class="tab-wrapper">
+    <div class="section-rule"><span>Explore</span></div>
+    <div class="tab-container">
+        <button class="tab-btn active" onclick="openTab('services', this)">Services We Offer</button>
+        <button class="tab-btn" onclick="openTab('templates', this)">Birthday Templates</button>
+        <button class="tab-btn" onclick="openTab('projects', this)">Other Projects</button>
+    </div>
+</div>
+
+<!-- Content -->
+<div class="content-area">
+
+    <div id="services" class="tab-content active">
+        <div class="coming-soon-wrap">
+            <div class="coming-soon">Coming Soon</div>
+            <p class="coming-soon-sub">Something great is being crafted</p>
+        </div>
+    </div>
+
+    <div id="templates" class="tab-content">
+        <div class="grid">
+
+            <div class="card">
+                <div class="card-img-wrap">
+                    <img src="https://images.unsplash.com/photo-1530103862676-de3c9de59f9e?auto=format&fit=crop&w=600&q=80" alt="Template 1">
+                </div>
+                <div class="card-content">
+                    <div class="card-index">01 / Template</div>
+                    <h4>Template 1</h4>
+                    <p>More information about the topic will come here within two to three lines.</p>
+                    <div class="card-actions"><a href="#" class="visit-btn">Visit</a></div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-img-wrap">
+                    <img src="https://images.unsplash.com/photo-1558636508-e0db3814bd1d?auto=format&fit=crop&w=600&q=80" alt="Template 2">
+                </div>
+                <div class="card-content">
+                    <div class="card-index">02 / Template</div>
+                    <h4>Template 2</h4>
+                    <p>More information about the topic will come here within two to three lines.</p>
+                    <div class="card-actions"><a href="#" class="visit-btn">Visit</a></div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-img-wrap">
+                    <img src="https://images.unsplash.com/photo-1464349153735-7db50ed83c84?auto=format&fit=crop&w=600&q=80" alt="Template 3">
+                </div>
+                <div class="card-content">
+                    <div class="card-index">03 / Template</div>
+                    <h4>Template 3</h4>
+                    <p>More information about the topic will come here within two to three lines.</p>
+                    <div class="card-actions"><a href="#" class="visit-btn">Visit</a></div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-img-wrap">
+                    <img src="https://images.unsplash.com/photo-1527529482837-4698179dc6ce?auto=format&fit=crop&w=600&q=80" alt="Template 4">
+                </div>
+                <div class="card-content">
+                    <div class="card-index">04 / Template</div>
+                    <h4>Template 4</h4>
+                    <p>More information about the topic will come here within two to three lines.</p>
+                    <div class="card-actions"><a href="#" class="visit-btn">Visit</a></div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-img-wrap">
+                    <img src="https://images.unsplash.com/photo-1506157786151-b8491531f063?auto=format&fit=crop&w=600&q=80" alt="Template 5">
+                </div>
+                <div class="card-content">
+                    <div class="card-index">05 / Template</div>
+                    <h4>Template 5</h4>
+                    <p>More information about the topic will come here within two to three lines.</p>
+                    <div class="card-actions"><a href="#" class="visit-btn">Visit</a></div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-img-wrap">
+                    <img src="https://images.unsplash.com/photo-1517404206475-8f8631f37229?auto=format&fit=crop&w=600&q=80" alt="Template 6">
+                </div>
+                <div class="card-content">
+                    <div class="card-index">06 / Template</div>
+                    <h4>Template 6</h4>
+                    <p>More information about the topic will come here within two to three lines.</p>
+                    <div class="card-actions"><a href="#" class="visit-btn">Visit</a></div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <div id="projects" class="tab-content">
+        <div class="coming-soon-wrap">
+            <div class="coming-soon">Coming Soon</div>
+            <p class="coming-soon-sub">Projects are in the making</p>
+        </div>
+    </div>
+
+</div>
+
+<!-- Footer -->
+<footer>
+    <div class="footer-brand">© 2026 Team Cipher</div>
+    <div class="social-links">
+        <a href="https://instagram.com/your_handle" target="_blank">Instagram</a>
+        <a href="/cdn-cgi/l/email-protection#0b7f6e6a6668627b636e794b6c666a626725686466">Gmail</a>
+    </div>
+    <div class="footer-copy">All rights reserved.</div>
+</footer>
+
+<script>
+    function openTab(tabName, clickedButton) {
+        document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+        document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+        document.getElementById(tabName).classList.add('active');
+        clickedButton.classList.add('active');
+    }
+</script>
