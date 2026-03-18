@@ -640,7 +640,111 @@
             color: rgba(122,120,144,0.5);
         }
 
-        /* ── Responsive: Tablet (≤1024px) ── */
+        /* ── Horizontal Service Cards ── */
+        .h-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .h-card {
+            display: flex;
+            background: var(--surface);
+            border-radius: 16px;
+            overflow: hidden;
+            border: 1px solid var(--border);
+            transition: transform 0.3s cubic-bezier(0.16,1,0.3,1), border-color 0.3s, box-shadow 0.3s;
+            position: relative;
+            min-height: 220px;
+        }
+
+        .h-card::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, rgba(200,184,255,0.03), transparent);
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .h-card:hover {
+            transform: translateY(-4px);
+            border-color: rgba(200,184,255,0.25);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.4), 0 0 0 1px rgba(200,184,255,0.1);
+        }
+
+        .h-card-img {
+            width: 280px;
+            flex-shrink: 0;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .h-card-img img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            filter: saturate(0.6) brightness(0.75);
+            transition: filter 0.4s, transform 0.5s cubic-bezier(0.16,1,0.3,1);
+            display: block;
+        }
+
+        .h-card:hover .h-card-img img {
+            filter: saturate(0.85) brightness(0.9);
+            transform: scale(1.04);
+        }
+
+        .h-card-body {
+            padding: 2rem 2rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            flex: 1;
+            position: relative;
+            z-index: 2;
+        }
+
+        .h-card-body h4 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.9rem;
+            font-weight: 400;
+            color: var(--text);
+            margin-bottom: 0.7rem;
+            line-height: 1.1;
+        }
+
+        .h-card-body p {
+            color: var(--muted);
+            font-size: 0.92rem;
+            line-height: 1.65;
+            margin-bottom: 1.5rem;
+            max-width: 500px;
+        }
+
+        .contact-btn {
+            display: inline-block;
+            background: linear-gradient(135deg, rgba(200,184,255,0.18), rgba(137,212,200,0.08));
+            color: var(--accent);
+            text-decoration: none;
+            padding: 0.65rem 1.6rem;
+            border-radius: 30px;
+            font-size: 0.78rem;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            font-family: 'DM Mono', monospace;
+            border: 1px solid rgba(200,184,255,0.35);
+            transition: all 0.25s;
+            align-self: flex-start;
+        }
+
+        .contact-btn:hover {
+            background: linear-gradient(135deg, rgba(200,184,255,0.28), rgba(137,212,200,0.15));
+            border-color: var(--accent);
+            box-shadow: 0 0 20px rgba(200,184,255,0.15);
+        }
+
+        /* ── Responsive: h-card stacks on mobile ── */
         @media (max-width: 1024px) {
             .hero {
                 gap: 2.5rem;
@@ -751,6 +855,20 @@
                 gap: 1.2rem;
             }
 
+            /* Horizontal service cards — stack on mobile */
+            .h-card {
+                flex-direction: column;
+            }
+
+            .h-card-img {
+                width: 100%;
+                height: 200px;
+            }
+
+            .h-card-body {
+                padding: 1.5rem;
+            }
+
             /* Coming soon */
             .coming-soon {
                 font-size: clamp(2rem, 10vw, 3.5rem);
@@ -809,7 +927,7 @@
 <!-- Hero -->
 <section class="hero">
     <div class="hero-text">
-        <div class="eyebrow">Est. 2024 &nbsp;—&nbsp; New Delhi</div>
+        <div class="eyebrow">Est. 2026 &nbsp;—&nbsp; New Delhi</div>
 
         <h1 class="hero-title">Team <em>Cipher</em></h1>
 
@@ -823,9 +941,7 @@
             </div>
         </div>
 
-        <p class="hero-desc">We build thoughtful digital experiences, robust platforms, and practical tools to solve real-world problems.</p>
-
-        <div class="hero-stats">
+<div class="hero-stats">
             <div class="stat">
                 <div class="stat-num">6+</div>
                 <div class="stat-label">Templates</div>
@@ -855,103 +971,71 @@
     <div class="section-rule"><span>Explore</span></div>
     <div class="tab-container">
         <button class="tab-btn active" onclick="openTab('services', this)">Services We Offer</button>
-        <button class="tab-btn" onclick="openTab('templates', this)">Birthday Templates</button>
-        <button class="tab-btn" onclick="openTab('projects', this)">Other Projects</button>
+        <button class="tab-btn" onclick="openTab('projects', this)">Our Projects</button>
+        <button class="tab-btn" onclick="openTab('testimonials', this)">Testimonials</button>
     </div>
 </div>
 
 <!-- Content -->
 <div class="content-area">
 
+    <!-- Services -->
     <div id="services" class="tab-content active">
-        <div class="coming-soon-wrap">
-            <div class="coming-soon">Coming Soon</div>
-            <p class="coming-soon-sub">Something great is being crafted</p>
-        </div>
-    </div>
+        <div class="h-grid">
 
-    <div id="templates" class="tab-content">
-        <div class="grid">
-
-            <div class="card">
-                <div class="card-img-wrap">
-                    <img src="https://images.unsplash.com/photo-1530103862676-de3c9de59f9e?auto=format&fit=crop&w=600&q=80" alt="Template 1">
+            <div class="h-card">
+                <div class="h-card-img">
+                    <img src="https://images.unsplash.com/photo-1547658719-da2b51169166?auto=format&fit=crop&w=600&q=80" alt="Website Development">
                 </div>
-                <div class="card-content">
-                    <div class="card-index">01 / Template</div>
-                    <h4>Template 1</h4>
-                    <p>More information about the topic will come here within two to three lines.</p>
-                    <div class="card-actions"><a href="#" class="visit-btn">Visit</a></div>
+                <div class="h-card-body">
+                    <div class="card-index">01 / Service</div>
+                    <h4>Website Development</h4>
+                    <p>From clean portfolios to full-featured business sites — we design and build fast, modern websites tailored to your brand and goals.</p>
+                    <div class="card-actions">
+                        <a href="https://wa.me/919569318598?text=Hi%20Team%20Cipher!%20I'm%20interested%20in%20Website%20Development." target="_blank" class="contact-btn">Contact Us</a>
+                    </div>
                 </div>
             </div>
 
-            <div class="card">
-                <div class="card-img-wrap">
-                    <img src="https://images.unsplash.com/photo-1558636508-e0db3814bd1d?auto=format&fit=crop&w=600&q=80" alt="Template 2">
+            <div class="h-card">
+                <div class="h-card-img">
+                    <img src="https://images.unsplash.com/photo-1562577309-4932fdd64cd1?auto=format&fit=crop&w=600&q=80" alt="Social Media Management">
                 </div>
-                <div class="card-content">
-                    <div class="card-index">02 / Template</div>
-                    <h4>Template 2</h4>
-                    <p>More information about the topic will come here within two to three lines.</p>
-                    <div class="card-actions"><a href="#" class="visit-btn">Visit</a></div>
-                </div>
-            </div>
-
-            <div class="card">
-                <div class="card-img-wrap">
-                    <img src="https://images.unsplash.com/photo-1464349153735-7db50ed83c84?auto=format&fit=crop&w=600&q=80" alt="Template 3">
-                </div>
-                <div class="card-content">
-                    <div class="card-index">03 / Template</div>
-                    <h4>Template 3</h4>
-                    <p>More information about the topic will come here within two to three lines.</p>
-                    <div class="card-actions"><a href="#" class="visit-btn">Visit</a></div>
-                </div>
-            </div>
-
-            <div class="card">
-                <div class="card-img-wrap">
-                    <img src="https://images.unsplash.com/photo-1527529482837-4698179dc6ce?auto=format&fit=crop&w=600&q=80" alt="Template 4">
-                </div>
-                <div class="card-content">
-                    <div class="card-index">04 / Template</div>
-                    <h4>Template 4</h4>
-                    <p>More information about the topic will come here within two to three lines.</p>
-                    <div class="card-actions"><a href="#" class="visit-btn">Visit</a></div>
-                </div>
-            </div>
-
-            <div class="card">
-                <div class="card-img-wrap">
-                    <img src="https://images.unsplash.com/photo-1506157786151-b8491531f063?auto=format&fit=crop&w=600&q=80" alt="Template 5">
-                </div>
-                <div class="card-content">
-                    <div class="card-index">05 / Template</div>
-                    <h4>Template 5</h4>
-                    <p>More information about the topic will come here within two to three lines.</p>
-                    <div class="card-actions"><a href="#" class="visit-btn">Visit</a></div>
-                </div>
-            </div>
-
-            <div class="card">
-                <div class="card-img-wrap">
-                    <img src="https://images.unsplash.com/photo-1517404206475-8f8631f37229?auto=format&fit=crop&w=600&q=80" alt="Template 6">
-                </div>
-                <div class="card-content">
-                    <div class="card-index">06 / Template</div>
-                    <h4>Template 6</h4>
-                    <p>More information about the topic will come here within two to three lines.</p>
-                    <div class="card-actions"><a href="#" class="visit-btn">Visit</a></div>
+                <div class="h-card-body">
+                    <div class="card-index">02 / Service</div>
+                    <h4>Social Media Management</h4>
+                    <p>We handle your content, captions, scheduling, and growth strategy — so your brand stays consistent, active, and engaging across platforms.</p>
+                    <div class="card-actions">
+                        <a href="https://wa.me/919569318598?text=Hi%20Team%20Cipher!%20I'm%20interested%20in%20Social%20Media%20Management." target="_blank" class="contact-btn">Contact Us</a>
+                    </div>
                 </div>
             </div>
 
         </div>
     </div>
 
+    <!-- Our Projects -->
     <div id="projects" class="tab-content">
+        <div class="h-grid">
+            <div class="h-card">
+                <div class="h-card-img">
+                    <img src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=600&q=80" alt="Aaj Ka Freelancer">
+                </div>
+                <div class="h-card-body">
+                    <div class="card-index">01 / Project</div>
+                    <h4>Aaj Ka Freelancer</h4>
+                    <p>A platform built for the modern Indian freelancer — resources, tools, and community to help you grow your independent career.</p>
+                    <div class="card-actions"><a href="#" class="visit-btn">Visit</a></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Testimonials -->
+    <div id="testimonials" class="tab-content">
         <div class="coming-soon-wrap">
             <div class="coming-soon">Coming Soon</div>
-            <p class="coming-soon-sub">Projects are in the making</p>
+            <p class="coming-soon-sub">Our clients will speak for us</p>
         </div>
     </div>
 
@@ -961,8 +1045,9 @@
 <footer>
     <div class="footer-brand">© 2026 Team Cipher</div>
     <div class="social-links">
-        <a href="https://instagram.com/your_handle" target="_blank">Instagram</a>
-        <a href="/cdn-cgi/l/email-protection#0b7f6e6a6668627b636e794b6c666a626725686466">Gmail</a>
+        <a href="https://instagram.com/team.cipher.ready.to.work" target="_blank">Instagram</a>
+        <a href="mailto:teamcipher.work@gmail.com">Gmail</a>
+        <a href="https://wa.me/919569318598" target="_blank">WhatsApp</a>
     </div>
     <div class="footer-copy">All rights reserved.</div>
 </footer>
@@ -975,3 +1060,5 @@
         clickedButton.classList.add('active');
     }
 </script>
+</body>
+</html>
